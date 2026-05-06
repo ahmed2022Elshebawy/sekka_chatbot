@@ -7,7 +7,9 @@ import os
 # تحميل env
 load_dotenv()
 
+
 api_key = os.getenv("OPENAI_API_KEY")
+api_key = api_key.strip().replace("\n", "").replace("\r", "")
 
 if not api_key:
     raise ValueError("OPENAI_API_KEY is missing")
