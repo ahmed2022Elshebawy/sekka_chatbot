@@ -54,7 +54,12 @@ def home():
         "message": "Sekka Chatbot is running 🚀"
     }
 
-
+@app.get("/test-key")
+def test_key():
+    return {
+        "key_exists": bool(api_key),
+        "key_start": api_key[:10] if api_key else None
+    }
 # Route الشات
 @app.post("/chat")
 async def chat(request: ChatRequest):
