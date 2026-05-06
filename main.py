@@ -3,8 +3,9 @@ from pydantic import BaseModel
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
+import traceback
 
-# تحميل Environment Variables
+# تحميل متغيرات البيئة
 load_dotenv()
 
 # قراءة API Key
@@ -14,7 +15,10 @@ if not api_key:
     raise ValueError("OPENAI_API_KEY is missing")
 
 # إنشاء OpenAI Client
-client = OpenAI(api_key=api_key)
+client = OpenAI(
+    api_key=api_key,
+    timeout=30
+)
 
 # إنشاء FastAPI App
 app = FastAPI()
@@ -41,25 +45,29 @@ SYSTEM_MESSAGE = {
 chat_log = [SYSTEM_MESSAGE]
 
 
-# شكل البيانات القادمة من المستخدم
+# شكل البيانات القادمة
 class ChatRequest(BaseModel):
     message: str
 
 
-# Route رئيسي للتأكد أن السيرفر شغال
+# الصفحة الرئيسية
 @app.get("/")
 def home():
     return {
-        "status": "success",
+        "success": True,
         "message": "Sekka Chatbot is running 🚀"
     }
 
+
+# اختبار الـ API Key
 @app.get("/test-key")
 def test_key():
     return {
         "key_exists": bool(api_key),
         "key_start": api_key[:10] if api_key else None
     }
+
+
 # Route الشات
 @app.post("/chat")
 async def chat(request: ChatRequest):
@@ -72,14 +80,14 @@ async def chat(request: ChatRequest):
             "content": request.message
         })
 
-        # استدعاء OpenAI
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=chat_log
+        # استدعاء OpenAI API
+        response = client.responses.create(
+            model="gpt-4.1-mini",
+            input=chat_log
         )
 
         # استخراج الرد
-        bot_response = response.choices[0].message.content
+        bot_response = response.output_text
 
         # حفظ الرد
         chat_log.append({
@@ -97,7 +105,8 @@ async def chat(request: ChatRequest):
     except Exception as e:
         return {
             "success": False,
-            "error": str(e)
+            "error": str(e),
+            "trace": traceback.format_exc()
         }
 
 
