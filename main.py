@@ -22,6 +22,10 @@ chat_responses = []
 class ChatRequest(BaseModel):
     message: str
 
+@app.get("/")
+def home():
+    return {"message": "Sekka Chatbot is running 🚀"}
+
 @app.post("/chat")
 async def chat(request: ChatRequest):
 
