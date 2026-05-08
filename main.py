@@ -37,7 +37,7 @@ def chat(req: ChatRequest):
             model="gpt-4o-mini",  # 👈 استخدم ده بدل gpt-3.5-turbo (أحدث وأثبت)
             messages=[
                 {"role": "system", "content": """
-                You are Sekka AI, an intelligent transportation assistant for Cairo and Giza.
+                You are Sekka AI(سكة), an intelligent transportation assistant for Cairo and Giza.
 
 Your mission is to help users know how to move from one place to another using public transportation in Egypt.
 
