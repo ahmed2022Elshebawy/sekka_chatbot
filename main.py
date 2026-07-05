@@ -4,7 +4,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
-# تحميل env
+
 load_dotenv()
 
 
@@ -14,13 +14,13 @@ api_key = api_key.strip().replace("\n", "").replace("\r", "")
 if not api_key:
     raise ValueError("OPENAI_API_KEY is missing")
 
-# إنشاء client صح (ده المهم)
+
 client = OpenAI(api_key=api_key)
 
 app = FastAPI()
 
 
-# شكل request
+
 class ChatRequest(BaseModel):
     message: str
 
@@ -34,7 +34,7 @@ def home():
 def chat(req: ChatRequest):
     try:
         response = client.chat.completions.create(
-            model="gpt-4o-mini",  # 👈 استخدم ده بدل gpt-3.5-turbo (أحدث وأثبت)
+            model="gpt-4o-mini",  
             messages=[
                 {"role": "system", "content": """
                 You are Sekka AI(سكة), an intelligent transportation assistant for Cairo and Giza.
@@ -97,7 +97,7 @@ Important:
         }
 
 
-# اختبار الاتصال بـ OpenAI
+
 @app.get("/ping-openai")
 def ping_openai():
     try:
